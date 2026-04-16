@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데뷔 시나리오 테스트 : 당신의 연습생 유형은?</title>
+    <style>
+        :root {
+            --pd-pink: #ff78bb;
+            --pd-blue: #72d2ff;
+            --pd-dark-blue: #1a2a6c;
+        }
+
+        body {
+            font-family: 'Pretendard', 'Malgun Gothic', sans-serif;
+            background: linear-gradient(180deg, var(--pd-blue) 0%, var(--pd-pink) 100%);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        #game-container {
+            background: rgba(255, 255, 255, 0.95);
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .hidden { display: none; }
+
+        h2 { color: var(--pd-dark-blue); font-size: 1.1rem; line-height: 1.5; margin-bottom: 20px; word-break: keep-all; min-height: 3em; display: flex; align-items: center; justify-content: center; }
+        
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 12px 0;
+            border: 2px solid var(--pd-blue);
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            text-align: left;
+            word-break: keep-all;
+        }
+        .option-btn:hover {
+            background: var(--pd-blue);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        #progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            margin-bottom: 25px;
+        }
+        #progress-inner {
+            height: 100%;
+            width: 0%;
+            background: var(--pd-pink);
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+
+        #result-title { font-size: 1.6rem; color: var(--pd-pink); font-weight: 800; margin: 15px 0; }
+        #result-desc { line-height: 1.7; text-align: left; color: #444; font-size: 0.95rem; background: #f9f9f9; padding: 15px; border-radius: 10px; }
+        
+        /* 이스터에그를 위한 스타일 추가 */
+        #main-title {
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .start-btn {
+            background: var(--pd-pink);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            border-radius: 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 120, 187, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="start-page">
+        <h1 id="main-title" onclick="triggerEgg()" style="color: var(--pd-dark-blue); letter-spacing: 2px;">PICK ME!</h1>
+        <p style="font-weight: 600;">만약 당신이 서바이벌 프로그램에 출연한다면?</p>
+        <p style="font-size: 0.85rem; color: #666; margin-bottom: 30px;">19가지 질문으로 분석하는 당신의 '데뷔 시나리오'</p>
+        <button class="start-btn" onclick="startTest()">테스트 시작하기</button>
+    </div>
+
+    <div id="quiz-page" class="hidden">
+        <div id="progress-bar"><div id="progress-inner"></div></div>
+        <div id="question-text"></div>
+        <div id="options-container"></div>
+    </div>
+
+    <div id="result-page" class="hidden">
+        <div style="font-size: 0.9rem; color: #888;">당신의 데뷔 시나리오는</div>
+        <div id="result-title"></div>
+        <div id="result-desc"></div>
+        <button class="option-btn" style="text-align: center; margin-top: 25px; background: var(--pd-dark-blue); color: white; border: none;" onclick="location.reload()">다시 테스트하기</button>
+    </div>
+</div>
+
+<script>
+    // 이스터에그 관련 변수 및 함수
+    let clickCount = 0;
+    function triggerEgg() {
+        clickCount++;
+        if (clickCount === 3) {
+            alert("🎤 [비하인드]\n\n\"이상원 허씬롱 김건우 이리오 정상현 김준서 장한음 최립우 박동규 정세민 신정환 김도훈 최영재 한진 한지훈 이경민 문성준 아틱 타이라가 너무 보고 싶어서 만들었습니다(4.16 19:26 北航数据结构시간)\"");
+            clickCount = 0; 
+        }
+    }
+
+    const questions = [
+        {
+            q: "1. 팀원의 실수로 팀 전체가 꾸중을 듣고 있는 상황, 카메라가 당신을 비춘다면?",
+            options: [
+                { text: "상황을 수습하기 위해 감정적으로 팀원을 감싸준다", type: "a" },
+                { text: "냉정하게 분석하며 내 책임도 언급하며 복기한다", type: "b" },
+                { text: "당혹스러운 기색이 표정에 고스란히 드러난다", type: "c" },
+                { text: "별다른 리액션 없이 조용히 상황이 지나가길 기다린다", type: "d" }
+            ]
+        },
+        {
+            q: "2. 마스터에게 공개적으로 뼈아픈 비평을 들었다면?",
+            options: [
+                { text: "순간적으로 울컥하며 서러운 마음이 든다", type: "a" },
+                { text: "지적받은 부분을 메모하거나 바로 고쳐본다", type: "b" },
+                { text: "입술을 깨물거나 고개를 숙이는 등 표정이 굳는다", type: "c" },
+                { text: "무슨 말을 하든 내 페이스를 유지하려고 노력한다", type: "d" }
+            ]
+        },
+        {
+            q: "3. 프로그램 내에서 친했던 참가자가 내 센터 자리를 가져갔다면?",
+            options: [
+                { text: "축하해주지만 속으로는 멘탈이 심하게 흔들린다", type: "a" },
+                { text: "진심으로 축하하고 내 파트에서 보여줄 것을 찾는다", type: "b" },
+                { text: "축하 멘트를 하면서도 표정은 숨기지 못한다", type: "c" },
+                { text: "누가 하든 결과는 비슷할 거라며 대수롭지 않게 여긴다", type: "d" }
+            ]
+        },
+        {
+            q: "4. 경연 하루 전, 갑자기 파트가 바뀌어 고난도 파트를 맡게 된다면?",
+            options: [
+                { text: "실수할까 봐 불안해서 잠을 이루지 못한다", type: "a" },
+                { text: "연습실에 끝까지 남아 완벽하게 소화하려 애쓴다", type: "b" },
+                { text: "멘탈이 나가서 자꾸만 안 하던 실수를 반복한다", type: "c" },
+                { text: "안 되는 건 어쩔 수 없다며 할 수 있는 만큼만 한다", type: "d" }
+            ]
+        },
+        {
+            q: "5. 내 직캠이 갑자기 떡상했다면?",
+            options: [
+                { text: "감격해서 팬들의 댓글을 밤새 읽어본다", type: "a" },
+                { text: "기대에 부응해야 한다는 생각에 자신을 더 채찍질한다", type: "b" },
+                { text: "은근히 우쭐해지며 행동이 조금 과감해진 나온다", type: "c" },
+                { text: "인기는 한때라며 평소처럼 행동하려고 한다", type: "d" }
+            ]
+        },
+        {
+            q: "6. 외모에 대한 비하 발언이 실시간 트렌드에 올랐다면?",
+            options: [
+                { text: "혼자 댓글을 다 확인하며 속상해한다", type: "a" },
+                { text: "신경 끄고 오직 무대 준비에만 집중한다", type: "b" },
+                { text: "욱하는 마음에 티를 내거나 반응을 보이고 싶어진다", type: "c" },
+                { text: "원래 호불호는 갈리는 법이라며 무시한다", type: "d" }
+            ]
+        },
+        {
+            q: "7. 무대 위에서 멍 때리는 모습이 포착되어 태도 논란이 생겼다면?",
+            options: [
+                { text: "진심으로 사과하고 오해를 풀고 싶어 한다", type: "a" },
+                { text: "말보다는 다음 무대의 실력으로 입증하려 한다", type: "b" },
+                { text: "세상의 억까라고 생각하며 기분이 태도가 된다", type: "c" },
+                { text: "해명해도 믿을 사람은 믿고 안 믿을 사람은 안 믿는다", type: "d" }
+            ]
+        },
+        {
+            q: "8. 순위가 갑자기 대폭 하락했을 때, 당신의 반응은?",
+            options: [
+                { text: "결과 발표 중 밀려오는 서러움을 참지 못한다", type: "a" },
+                { text: "담담하게 소감을 말하며 재기를 다짐한다", type: "b" },
+                { text: "당황해서 무슨 말을 하는지도 모를 만큼 횡설수설한다", type: "c" },
+                { text: "순위에 연연하지 않고 받아들인다", type: "d" }
+            ]
+        },
+        {
+            q: "9. 악마의 편집을 당해 부정적인 여론이 형성되었다면?",
+            options: [
+                { text: "너무 억울해서 주변에 하소연하거나 변명한다", type: "a" },
+                { text: "그냥 내 할 일을 묵묵히 해서 여론을 돌리려 한다", type: "b" },
+                { text: "제작진에 대한 불만이 표정에서 다 드러난다", type: "c" },
+                { text: "방송국 놈들이 다 그렇지 뭐, 하고 넘긴다", type: "d" }
+            ]
+        },
+        {
+            q: "10. 평가에 비해 점수가 너무 낮게 나왔다면?",
+            options: [
+                { text: "속상해서 의욕이 크게 꺾인다", type: "a" },
+                { text: "점수 기준을 분석하며 부족한 점을 찾는다", type: "b" },
+                { text: "불공평하다는 생각에 짜증 섞인 표정을 짓는다", type: "c" },
+                { text: "점수가 전부는 아니라며 쿨하게 넘긴다", type: "d" }
+            ]
+        },
+        {
+            q: "11. 팀원이 뒤에서 내 욕을 하는 것을 들었다면?",
+            options: [
+                { text: "마음에 담아두고 계속 신경 쓰여 힘들어한다", type: "a" },
+                { text: "상대방을 불러서 조용히 오해를 풀려고 시도한다", type: "b" },
+                { text: "그 자리에서 똑같이 갚아주거나 표정으로 저격한다", type: "c" },
+                { text: "누가 뭐라 하든 상관없다며 무관심으로 대응한다", type: "d" }
+            ]
+        },
+        {
+            q: "12. 하기 싫은 컨셉의 곡을 억지로 하게 되었다면?",
+            options: [
+                { text: "거부감이 커서 연습 내내 우울해한다", type: "a" },
+                { text: "이왕 하는 거 새로운 도전이라 생각하고 몰입한다", type: "b" },
+                { text: "연습하는 내내 툴툴거리거나 의욕 없는 티를 낸다", type: "c" },
+                { text: "시키는 대로 기본만 하고 끝낸다", type: "d" }
+            ]
+        },
+        {
+            q: "13. 분량이 거의 없어 통편집 수준이라면?",
+            options: [
+                { text: "내가 매력이 없나 싶어 자책에 빠진다", type: "a" },
+                { text: "분량을 따기 위해 킬링 파트를 더 연구한다", type: "b" },
+                { text: "인위적으로라도 튀는 행동을 해서 카메라를 노린다", type: "c" },
+                { text: "안 나오면 그만이지, 하는 마인드로 편하게 있는다", type: "d" }
+            ]
+        },
+        {
+            q: "14. 팬들이 소속사와 싸우며 실트 총공을 하고 있다면?",
+            options: [
+                { text: "나 때문에 팬들이 고생하는 것 같아 괴롭다", type: "a" },
+                { text: "팬들이 걱정되지 않도록 더 좋은 모습을 보여주려 한다", type: "b" },
+                { text: "화력이 좋은 걸 보고 내 영향력에 자부심을 느낀다", type: "c" },
+                { text: "밖에서 무슨 일이 일어나든 내 연습에만 집중한다", type: "d" }
+            ]
+        },
+        {
+            q: "15. 공연 중 큰 실수를 해서 전국민적인 조롱을 받는다면?",
+            options: [
+                { text: "창피해서 한동안 남의 눈을 피하고 싶어진다", type: "a" },
+                { text: "뭐가 문제였는지 수백 번 영상을 돌려보며 보완한다", type: "b" },
+                { text: "악플러들이 너무하다고 생각하며 감정적으로 반응한다", type: "c" },
+                { text: "누구나 실수할 수 있다며 금방 털어낸다", type: "d" }
+            ]
+        },
+        {
+            q: "16. 인기 최상위권 연습생에게 묻히게 된다면?",
+            options: [
+                { text: "비교당하는 기분에 자신감이 바닥을 친다", type: "a" },
+                { text: "그 사람의 장점을 배우고 함께 윈윈할 방법을 찾는다", type: "b" },
+                { text: "열등감을 느끼며 팀 분위기를 묘하게 만든다", type: "c" },
+                { text: "묻어가는 게 편하다며 부담 없이 무대를 준비한다", type: "d" }
+            ]
+        },
+        {
+            q: "17. 제작진이 원치 않는 커플 서사를 강요한다면?",
+            options: [
+                { text: "싫지만 거절하지 못해 억지로 맞춘다", type: "a" },
+                { text: "비즈니스라고 마인드 컨트롤하며 프로답게 연기한다", type: "b" },
+                { text: "싫은 티를 너무 내서 방송 분량을 다 망쳐놓는다", type: "c" },
+                { text: "하라는 대로 하고 생각은 비운다", type: "d" }
+            ]
+        },
+        {
+            q: "18. 실력이 순위에 못 미친다는 의혹을 받는다면?",
+            options: [
+                { text: "내가 이 자리에 있을 자격이 있나 매일 밤 고민한다", type: "a" },
+                { text: "더 독하게 연습해서 실력 논란을 잠재운다", type: "b" },
+                { text: "억울해하며 감정을 조절하지 못하고 터뜨린다", type: "c" },
+                { text: "인기 있는 것도 실력이라며 신경 쓰지 않는다", type: "d" }
+            ]
+        },
+        {
+            q: "19. 파이널 생방송 전날 밤, 혼자 있을 때?",
+            options: [
+                { text: "떨어지면 어쩌나 하는 생각에 눈물이 난다", type: "a" },
+                { text: "마지막 무대 동선을 머릿속으로 무한 반복한다", type: "b" },
+                { text: "탈출하고 싶다는 생각과 불안함이 교차한다", type: "c" },
+                { text: "졸리니까 일단 자고 내일 생각하기로 한다", type: "d" }
+            ]
+        }
+    ];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    let currentIdx = 0;
+    let scores = { a:0, b:0, c:0, d:0 };
+
+    function startTest() {
+        document.getElementById('start-page').classList.add('hidden');
+        document.getElementById('quiz-page').classList.remove('hidden');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const qData = questions[currentIdx];
+        document.getElementById('question-text').innerHTML = `<h2>${qData.q}</h2>`;
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+        
+        const shuffledOptions = shuffle([...qData.options]);
+
+        shuffledOptions.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt.text;
+            btn.onclick = () => nextQuestion(opt.type);
+            container.appendChild(btn);
+        });
+
+        document.getElementById('progress-inner').style.width = `${(currentIdx / questions.length) * 100}%`;
+    }
+
+    function nextQuestion(type) {
+        scores[type]++;
+        currentIdx++;
+        if (currentIdx < questions.length) {
+            showQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-page').classList.add('hidden');
+        document.getElementById('result-page').classList.remove('hidden');
+
+        const maxScore = Math.max(scores.a, scores.b, scores.c, scores.d);
+        let title = "";
+        let desc = "";
+
+        if (scores.b === maxScore) {
+            title = "【육각형 데뷔 머신】";
+            desc = "당신은 마스터들이 가장 신뢰하는 '육각형 연습생'입니다. 냉정하고, 프로페셔널하며, 흔들림이 없습니다. 누군가는 당신을 보고 독하다고 할지 모르지만, 실력으로 모든 논란을 잠재우는 스타일입니다. 데뷔는 이미 정해진 수순일지도? 팬들은 당신의 유능함에 열광할지만, 완벽주의가 스스로를 갉아먹지 않게 조심하세요";
+        } else if (scores.a === maxScore) {
+            title = "【눈물 가득 서사 맛집 】";
+            desc = "당신은 이번 시즈 최고의 '눈물 치트키'입니다. 당신의 눈물 한 방울에 팬들의 투표권은 불타오릅니다. 다만, 팬들이 당신을 보며 같이 우느라 투표하는 것을 잊어버릴 수도? 멘탈 관리만 잘한다면 최고의 스타가 될 것입니다.";
+        } else if (scores.c === maxScore) {
+            title = "【실트 장악하는 트러블 메이커 】";
+            desc = "당신은 방송의 재미를 책임지는 사람입니다. 솔직하고 거침없는 성격 덕분에 분량은 확실히 챙기지만, 악마의 편집에 희생될 위험도 큽니다. 호불호는 극명하게 갈리겠지만, 당신이 없는 이 프로그램은 무색무취 그 자체일 겁니다.";
+        } else {
+            title = "【간절함 제로 데뷔 조기퇴근 희망자】";
+            desc = "서바이벌에서 도를 닦고 계시군요? 남들은 피 튀기게 경쟁할 때 혼자 해탈한 모습이 오히려 신선한 충격을 줍니다. '억지로 시켜서 하는 아이돌' 같은 매력에 빠진 팬들이 당신을 강제로 데뷔시킬 기세입니다.";
+        }
+
+        document.getElementById('result-title').innerText = title;
+        document.getElementById('result-desc').innerText = desc;
+    }
+</script>
+
+</body>
+</html>
